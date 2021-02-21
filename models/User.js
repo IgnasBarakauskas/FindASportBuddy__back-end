@@ -17,6 +17,10 @@ const UserSchema = mongoose.Schema({
         type: Date,
         required:true
     },
+    role:{
+        type: String,
+        required: true
+    },
     height:{
         type:Number,
         required:false
@@ -31,6 +35,10 @@ const UserSchema = mongoose.Schema({
     },
     longtitude:{
         type:Number,
+        required:false
+    },
+    coordinatesUpdateDate:{
+        type:Date,
         required:false
     },
     groups:[{
