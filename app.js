@@ -15,7 +15,7 @@ app.get('/', (req,res) =>{
 })
 
 mongoose.connect(
-    process.env.DB_CONNECTION,
+ `mongodb+srv://${process.env.DB_LOGIN}:${process.env.DB_PASSWORD}@findasportbuddy.ad0wh.mongodb.net/findASportBuddy?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true },
     () => console.log("connected to DB")
   );
