@@ -23,11 +23,14 @@ router.post("/", async (req, res) => {
   if(error){
   return res.status(400).json({Message:error.details[0].message})
   }
-  const email = String(req.body.email)
-  const emailExist = await User.findOne({email: email});
-  if(emailExist) return res.status(400).json({Message: "Email already exists"})
-  
-  const salt = await bcrypt.genSalt(10);
+  const querry = {email: req.body.email}
+
+  User.findOne(querry, async function(err, users){
+    if(users.length>0){
+      return res.status(400).json({Message: "Email already exists"})
+    }
+    else{
+      const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password,salt);
   const user = new User({
     fullName: req.body.fullName,
@@ -44,6 +47,8 @@ router.post("/", async (req, res) => {
     res.status(400);
     res.json({ message: err });
   }
+    }
+  })  
 });
 
 module.exports = router;
