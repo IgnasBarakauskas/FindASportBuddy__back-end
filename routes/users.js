@@ -20,9 +20,11 @@ router.get("/", async (req, res) => {
 });
 router.post("/", async (req, res) => {
   const {error} = userValidation(req.body)
-  if(error)
+  if(error){
   return res.status(400).json({Message:error.details[0].message})
-  const emailExist = await User.findOne({email: req.body.email});
+  }
+  const email = String(req.body.email)
+  const emailExist = await User.findOne({email: email});
   if(emailExist) return res.status(400).json({Message: "Email already exists"})
   
   const salt = await bcrypt.genSalt(10);
