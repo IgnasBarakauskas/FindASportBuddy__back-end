@@ -20,7 +20,6 @@ router.get("/", async (req, res) => {
 });
 router.post("/", async (req, res) => {
   const {error} = userValidation(req.body)
-  console.log("test: ", req.body)
   if(error)
   return res.status(400).json({Message:error.details[0].message})
   const emailExist = await User.findOne({email: req.body.email});
