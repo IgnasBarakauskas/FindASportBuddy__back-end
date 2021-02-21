@@ -2,12 +2,15 @@ const express = require("express")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 require("dotenv").config()
-const app = express();
+
 // const cors = require("cors");
 const usersRoute = require("./routes/users");
 const groupsRoute = require("./routes/groups");
 
 var PORT = process.env.PORT || 3000;
+
+const app = express();
+app.disable("x-powered-by");
 // app.use(cors());
 app.use(bodyParser.json())
 
