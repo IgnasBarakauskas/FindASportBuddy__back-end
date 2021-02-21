@@ -6,6 +6,8 @@ const app = express();
 const usersRoute = require("./routes/users");
 const groupsRoute = require("./routes/groups");
 
+var PORT = process.env.PORT || 3000;
+
 app.use(bodyParser.json())
 
 app.use('/users', usersRoute)
@@ -22,4 +24,4 @@ mongoose.connect(
     () => console.log("connected to DB")
   );
 
-app.listen(3000)
+app.listen(PORT)
