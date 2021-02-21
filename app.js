@@ -2,9 +2,9 @@ const express = require("express")
 const mongoose = require("mongoose")
 require("dotenv").config()
 const app = express();
-
 const usersRoute = require("./routes/users");
 const groupsRoute = require("./routes/groups");
+const PORT = process.env.PORT || 3000
 
 app.use('/users', usersRoute)
 
@@ -20,4 +20,4 @@ mongoose.connect(
     () => console.log("connected to DB")
   );
 
-app.listen(3000)
+app.listen(PORT)
