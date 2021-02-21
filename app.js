@@ -1,10 +1,12 @@
 const express = require("express")
 const mongoose = require("mongoose")
+const bodyParser = require("body-parser")
 require("dotenv").config()
 const app = express();
-
 const usersRoute = require("./routes/users");
 const groupsRoute = require("./routes/groups");
+
+app.use(bodyParser.json())
 
 app.use('/users', usersRoute)
 
