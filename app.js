@@ -4,13 +4,13 @@ require("dotenv").config()
 const bodyParser = require("body-parser")
 const usersRoute = require("./routes/users");
 const groupsRoute = require("./routes/groups");
-
+const cors =require(cors)
 const PORT = process.env.PORT || 3000
 const app = express();
 app.disable("x-powered-by");
 app.use(bodyParser.json())
 app.use('/users', usersRoute)
-
+app.use(cors());
 app.use('/groups', groupsRoute)
 
 app.get('/', (req,res) =>{
