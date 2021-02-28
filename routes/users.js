@@ -1,10 +1,10 @@
 const express = require("express");
-const { userRegistrationValidation, userLoginValidation } = require("./validation");
+const { userRegistrationValidation, userLoginValidation } = require("../user-validation/userValidation");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs")
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-
+const {isLoggedIn} =require("../token-verification/TokenVerification")
 router.get("/", async (req, res) => {
   try {
     res.status(200);
@@ -47,17 +47,49 @@ router.post("/", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const {error} = userLoginValidation(req.body)
-  if(error)
+  if(error){
   return res.status(400).json({Message:error.details[0].message})
+  }
   const user = await User.findOne({email: req.body.email});
   if(!user) return res.status(400).json({Message: "Email or password is wrong"})
   const validPass = await bcrypt.compare(req.body.password, user.password)
   if(!validPass) return res.status(400).json({Message: "Email or password is wrong"})
-
   const token = jwt.sign({_id: user._id, role:user.role}, process.env.TOKEN_SECRET)
   res.json({Token:token})
   res.status(200).json({Message:"Successfully loged in"
 })
+});
+router.patch("/:location",isLoggedIn, async (req, res) => {
+  const {error} = userLoginValidation(req.body)
+  if(error){
+  return res.status(400).json({Message:error.details[0].message})
+  }
+  const token = req.header("Token");
+  const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+  const _id = verified._id
+  try {
+    res.status(202);
+    const updatedUser = await User.updateOne(
+      { _id: _id },
+      {
+        $set: {
+          latitude: req.body.adress,
+          longtitude: req.body.role,
+        },
+      }
+    );
+    if (updatedUser.n === 0) {
+      res.status(404);
+      res.json({Message:"User was not found"});
+    } else if (updatedUser.nModified === 0) {
+      res.json({Message:"No modifications was done"});
+    } else {
+      res.json(updatedUser);
+    }
+  } catch (error) {
+    res.status(404);
+    res.json({ Message: error });
+  }
 });
 
 module.exports = router;
