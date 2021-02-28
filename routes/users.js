@@ -1,5 +1,5 @@
 const express = require("express");
-const { userRegistrationValidation, userLoginValidation } = require("../user-validation/userValidation");
+const { userRegistrationValidation, userLoginValidation, userLocationValidation } = require("../user-validation/userValidation");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs")
 const router = express.Router();
@@ -59,24 +59,22 @@ router.post("/login", async (req, res) => {
   res.status(200).json({Message:"Successfully loged in"
 })
 });
-router.patch("/location",isLoggedIn, async (req, res) => {
-  console.log("test")
-  const {error} = userLoginValidation(req.body)
+router.patch("/location", isLoggedIn, async (req, res) => {
+  const {error} = userLocationValidation(req.body)
   if(error){
   return res.status(400).json({Message:error.details[0].message})
   }
   const token = req.header("Token");
   const verified = jwt.verify(token, process.env.TOKEN_SECRET);
   const _id = verified._id
-  console.log("_id: ", _id)
   try {
     res.status(202);
     const updatedUser = await User.updateOne(
       { _id: _id },
       {
         $set: {
-          latitude: req.body.adress,
-          longtitude: req.body.role,
+          latitude: req.body.latitude,
+          longtitude: req.body.longtitude,
         },
       }
     );

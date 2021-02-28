@@ -19,7 +19,7 @@ const userLoginValidation = data => {
 
 const userLocationValidation = data => {
     const schema = Joi.object({
-        latitude: Joi.number().email(),
+        latitude: Joi.number().required(),
         longtitude: Joi.number().required(),
     });
     return schema.validate(data)
@@ -27,3 +27,4 @@ const userLocationValidation = data => {
 
 module.exports.userRegistrationValidation = userRegistrationValidation;
 module.exports.userLoginValidation = userLoginValidation;
+module.exports.userLocationValidation = userLocationValidation;
