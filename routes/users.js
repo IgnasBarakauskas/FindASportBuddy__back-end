@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
   res.status(200).json({Message:"Successfully loged in"
 })
 });
-router.patch("/:location",isLoggedIn, async (req, res) => {
+router.patch("/location",isLoggedIn, async (req, res) => {
   const {error} = userLoginValidation(req.body)
   if(error){
   return res.status(400).json({Message:error.details[0].message})
@@ -67,6 +67,7 @@ router.patch("/:location",isLoggedIn, async (req, res) => {
   const token = req.header("Token");
   const verified = jwt.verify(token, process.env.TOKEN_SECRET);
   const _id = verified._id
+  console.log("_id: ", _id)
   try {
     res.status(202);
     const updatedUser = await User.updateOne(
