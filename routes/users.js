@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
   try {
     res.status(201);
     const savedUser = await user.save();
-    res.json(savedUser);
+    res.json({message: "Successfully registered"});
   } catch (err) {
     res.status(400);
     res.json({ message: err });
@@ -56,7 +56,7 @@ router.post("/login", async (req, res) => {
 
   const token = jwt.sign({_id: user._id, role:user.role}, process.env.TOKEN_SECRET)
   res.json({Token:token})
-  res.status(200).json({Message:"Loged in"
+  res.status(200).json({Message:"Successfully loged in"
 })
 });
 
