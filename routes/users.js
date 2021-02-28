@@ -60,6 +60,7 @@ router.post("/login", async (req, res) => {
 })
 });
 router.patch("/location",isLoggedIn, async (req, res) => {
+  console.log("test")
   const {error} = userLoginValidation(req.body)
   if(error){
   return res.status(400).json({Message:error.details[0].message})
