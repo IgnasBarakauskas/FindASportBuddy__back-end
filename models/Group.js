@@ -12,7 +12,7 @@ const Group = mongoose.Schema({
         type:Number,
         required: true
     },
-    longtitude:{
+    longitude:{
         type:Number,
         required: true
     },

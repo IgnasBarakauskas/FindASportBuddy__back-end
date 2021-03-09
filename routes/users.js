@@ -74,7 +74,7 @@ router.patch("/location", isLoggedIn, async (req, res) => {
       {
         $set: {
           latitude: req.body.latitude,
-          longtitude: req.body.longtitude,
+          longitude: req.body.longitude,
         },
       }
     );

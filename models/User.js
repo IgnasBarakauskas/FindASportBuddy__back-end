@@ -33,7 +33,7 @@ const UserSchema = mongoose.Schema({
         type:Number,
         required:false
     },
-    longtitude:{
+    longitude:{
         type:Number,
         required:false
     },
