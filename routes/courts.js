@@ -39,4 +39,18 @@ router.get("/", async (req, res) => {
       res.json({ message: err });
     }
   });
+  router.get("/:courtId", async (req, res) => {
+	try {
+	  res.status(200);
+	  const court = await Court.findById(req.params.courtId);
+	  if (court === null) {
+		res.status(404);
+		res.json({Message:"There is no court with given ID"});
+	  } else {
+		res.json(court);
+	  }
+	} catch (err) {
+	  res.status(404);
+	  res.json({ message: err });
+	}})
   module.exports = router;

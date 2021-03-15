@@ -91,5 +91,20 @@ router.patch("/location", isLoggedIn, async (req, res) => {
     res.json({ Message: error });
   }
 });
+router.get("/:userId", async (req, res) => {
+	try {
+	  res.status(200);
+	  const user = await User.findById(req.params.userId);
+	  if (user === null) {
+		res.status(404);
+		res.json({Message:"There is no user with given ID"});
+	  } else {
+		res.json(user);
+	  }
+	} catch (err) {
+	  res.status(404);
+	  res.json({ message: err });
+	}
+  });
 
 module.exports = router;
