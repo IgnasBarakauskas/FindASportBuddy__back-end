@@ -53,4 +53,19 @@ router.get("/", async (req, res) => {
 	  res.status(404);
 	  res.json({ message: err });
 	}})
+	router.delete("/:courtId", async (req, res) => {
+		try {
+		  res.status(204);
+		  const removedCourt = await Court.deleteOne({ _id: req.params.courtId });
+		  if (removedCourt.deletedCount === 0) {
+			res.status(404);
+			res.json({Message:"Court was not found"});
+		  } else {
+			res.json(removedCourt);
+		  }
+		} catch (error) {
+		  res.status(404);
+		  res.json({ Message: error });
+		}
+	  });
   module.exports = router;
