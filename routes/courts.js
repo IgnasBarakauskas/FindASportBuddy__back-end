@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
     });
     try {
       res.status(201);
-      const savedCourt = await court.save();
+      await court.save();
       res.json({message: "Court added"});
     } catch (err) {
       res.status(400);

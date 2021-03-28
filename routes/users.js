@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
   });
   try {
     res.status(201);
-    const savedUser = await user.save();
+    await user.save();
     res.json({message: "Successfully registered"});
   } catch (err) {
     res.status(400);
@@ -60,8 +60,8 @@ router.post("/login", async (req, res) => {
 })
 });
 router.patch("/location", isLoggedIn, async (req, res) => {
-  const {error} = userLocationValidation(req.body)
-  if(error){
+  const {errorLocation} = userLocationValidation(req.body)
+  if(errorLocation){
   return res.status(400).json({Message:error.details[0].message})
   }
   const token = req.header("Token");
