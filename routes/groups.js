@@ -94,9 +94,8 @@ router.delete("/:groupId", async (req, res) =>{
 	  res.json({ Message: error });
 	}
   });
-  router.patch("/join/:groupId", async (req,res) =>{
-	  const {groupId} = req.params;
-	  const {userId} = req.body;
+  router.patch("/join/:groupId/:userId", async (req,res) =>{
+	  const {groupId,userId} = req.params;
 	  try{
 		res.status(202);
 		const group = await Group.findById(groupId);
@@ -132,9 +131,8 @@ router.delete("/:groupId", async (req, res) =>{
 	  res.json({ Message: error });
 	}
   })
-  router.patch("/leave/:groupId", async (req, res)=>{
-	const {groupId} = req.params;
-	const {userId} = req.body;
+  router.patch("/leave/:groupId/:userId", async (req, res)=>{
+	const {groupId, userId} = req.params;
 	try{
 	  res.status(202);
 	  await User.findByIdAndUpdate(
