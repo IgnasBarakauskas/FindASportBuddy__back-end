@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Group = mongoose.Schema({
+const GroupSchema = mongoose.Schema({
     sport:{
         type:String,
         required:true
@@ -24,8 +24,18 @@ const Group = mongoose.Schema({
         type:Number,
         requied: true
     },
+	ownerId:{
+		type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+	},
     participants:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    }]
+    }],
+	courtId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Court"
+    }
 })
+
+module.exports = mongoose.model("Group", GroupSchema);

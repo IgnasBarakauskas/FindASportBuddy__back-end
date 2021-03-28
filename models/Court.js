@@ -24,7 +24,11 @@ const CourtSchema = mongoose.Schema({
     photo:{
         type:String,
         required:false
-    }
+    },
+	groups:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group"
+    }],
 })
 
 module.exports = mongoose.model("Courts", CourtSchema);
