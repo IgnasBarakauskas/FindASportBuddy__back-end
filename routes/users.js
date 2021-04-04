@@ -1,10 +1,11 @@
 const express = require("express");
 const { userRegistrationValidation, userLoginValidation, userLocationValidation } = require("../user-validation/userValidation");
 const User = require("../models/User");
-const bcrypt = require("bcryptjs")
+const Group = require("../models/Group");
+const bcrypt = require("bcryptjs");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const {isLoggedIn} =require("../token-verification/TokenVerification")
+const {isLoggedIn} =require("../token-verification/TokenVerification");
 router.get("/", async (req, res) => {
   try {
     res.status(200);
@@ -106,5 +107,21 @@ router.get("/:userId", async (req, res) => {
 	  res.json({ message: err });
 	}
   });
-
+  router.get("/:userId/getGroups", async (req,res) =>{
+	try{
+	  res.status(200);
+	  const user = await User.findById(req.params.userId)
+	  const groupsId = user.groups;
+	  let groups =[];
+	  for(const index in groupsId){
+		  const group = await Group.findById(_id=groupsId[index])
+		  groups.push(group)
+	  }
+	  res.json(groups)
+	}
+	catch(err){
+	  res.status(404);
+	  res.json({ message: err });
+	}
+})
 module.exports = router;
