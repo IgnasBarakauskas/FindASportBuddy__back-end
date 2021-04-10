@@ -111,11 +111,14 @@ router.get("/:userId", async (req, res) => {
 	try{
 	  res.status(200);
 	  const user = await User.findById(req.params.userId)
-	  const groupsId = user.groups;
+	  const groupsId = user?.groups;
 	  let groups =[];
 	  for(const index in groupsId){
 		  const group = await Group.findById(_id=groupsId[index])
 		  groups.push(group)
+	  }
+	  if(!groups.length ){
+		  res.status(404).json({Message:"No groups to show"})
 	  }
 	  res.json(groups)
 	}
