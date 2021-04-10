@@ -114,7 +114,8 @@ router.delete("/:groupId", async (req, res) =>{
 		)
 	  const updatedGroup = await Group.updateOne(
 		  {_id: groupId},
-			{$push:{participants: userId}},{useFindAndModify:false},
+		  	{$set:{equipment:req.body.equipment},
+			$push:{participants: userId}},{useFindAndModify:false},
 	  )
 	  if (updatedGroup.n === 0) {
 		res.status(404);
