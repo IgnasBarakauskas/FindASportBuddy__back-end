@@ -10,6 +10,7 @@ router.get("/", async (req, res) => {
       const groups = await Group.find();
       if (!groups.length) { 
         res.status(404);
+		res.json({Message:"No groups to show"})
       } else {
         res.json(groups);
       }

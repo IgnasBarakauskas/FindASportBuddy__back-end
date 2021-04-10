@@ -80,6 +80,10 @@ router.get("/", async (req, res) => {
 				const group = await Group.findById(_id=groupsId[index])
 				groups.push(group)
 			}
+			if(!groups.length){
+				res.status(404)
+				res.json({Message:"No groups to show"})
+			}
 			res.json(groups)
 		  }
 		  catch(err){
