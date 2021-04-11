@@ -159,4 +159,25 @@ router.delete("/:groupId", async (req, res) =>{
 	res.json({ Message: error });
   }
 })
+router.get("/:groupId/getParticipants", async (req,res) =>{
+	try{
+	  res.status(200);
+	const group = await Group.findById(req.params.groupId)
+	  const participantsId = group.participants;
+	  let participants =[];
+	  for(const index in participantsId){
+		  const user = await User.findById(_id=participantsId[index])
+		  participants.push(user)
+	  }
+	  if(!participants.length){
+		  res.status(404)
+		  res.json({Message:"No participants to show"})
+	  }
+	  res.json(participants)
+	}
+	catch(err){
+	  res.status(404);
+	  res.json({ message: err });
+	}
+})
 module.exports = router;
