@@ -70,8 +70,8 @@ router.get("/", async (req, res) => {
 		  res.json({ Message: error });
 		}
 	  });
-	  router.get("/:courtId/getGroups", async (req,res) =>{
-		  try{
+	router.get("/:courtId/getGroups", async (req,res) =>{
+		try{
 			res.status(200);
       		const court = await Court.findById(req.params.courtId)
 			const groupsId = court.groups;
@@ -85,10 +85,10 @@ router.get("/", async (req, res) => {
 				res.json({Message:"No groups to show"})
 			}
 			res.json(groups)
-		  }
-		  catch(err){
+		}
+		catch(err){
 			res.status(404);
 			res.json({ message: err });
-		  }
-	  })
+		}
+	})
   module.exports = router;

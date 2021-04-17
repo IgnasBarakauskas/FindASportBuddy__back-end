@@ -32,6 +32,10 @@ const GroupSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     }],
+	messages:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message"
+    }],
 	courtId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Court"

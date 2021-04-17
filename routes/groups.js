@@ -2,6 +2,7 @@ const express = require("express");
 const Group = require("../models/Group");
 const Court = require("../models/Court");
 const User = require("../models/User");
+const Message = require("../models/Message");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -72,6 +73,7 @@ router.delete("/:groupId", async (req, res) =>{
 	  const group = await Group.findById(groupId);
 	  const courtId = group.courtId
 	  const usersIds = group.participants;
+	  const messagesId = group.messages;
 	  await Court.findByIdAndUpdate(
 		courtId,
 		{ $pull: { groups: { $in: [ groupId ] }} },{useFindAndModify:false},
@@ -82,6 +84,9 @@ router.delete("/:groupId", async (req, res) =>{
 			{ $pull: { groups: { $in: [ groupId ] }} },{useFindAndModify:false},
 		  );
 	  }
+	  for(const messageId of messagesId){
+		await Message.deleteOne({ _id: messageId });
+	  }
 	  const removedGroup = await Group.deleteOne({ _id: groupId });
 	  if (removedGroup.deletedCount === 0) {
 		res.status(404);
@@ -90,7 +95,6 @@ router.delete("/:groupId", async (req, res) =>{
 		res.status(204).json(removedGroup);
 	  }
 	} catch (error) {
-		console.log(error)
 	  res.status(404);
 	  res.json({ Message: error });
 	}
@@ -128,7 +132,6 @@ router.delete("/:groupId", async (req, res) =>{
 	  }
 	}
 	} catch (error) {
-		console.log(error)
 	  res.status(404);
 	  res.json({ Message: error });
 	}
@@ -154,7 +157,6 @@ router.delete("/:groupId", async (req, res) =>{
 	  res.json(updatedGroup);
 	}
   } catch (error) {
-	  console.log(error)
 	res.status(404);
 	res.json({ Message: error });
   }
@@ -180,4 +182,68 @@ router.get("/:groupId/getParticipants", async (req,res) =>{
 	  res.json({ message: err });
 	}
 })
+router.post("/:groupId/messages/:userId", async (req, res) =>{
+	let {groupId, userId} = req.params;
+	let {name, content} =  req.body;
+	try {
+		const message = new Message({
+			groupId: groupId,
+			writerId: userId,
+			writer: name,
+			content: content
+		});
+		const savedMessages = await message.save();
+		await Group.findByIdAndUpdate(
+			groupId,
+			{ $push: { messages: savedMessages._id } },{useFindAndModify:false},
+		  );
+	
+		  res.status(201).json(savedMessages);
+	  }
+	  catch (err) {
+		res.status(404);
+		res.json({ message: err });
+	  }
+})
+router.get("/:groupId/messages", async (req,res) =>{
+	try{
+	  res.status(200);
+	const group = await Group.findById(req.params.groupId)
+	  const messagesId = group.messages;
+	  let messages =[];
+	  for(const index in messagesId){
+		  const message = await Message.findById(_id=messagesId[index])
+		  messages.push(message)
+	  }
+	  if(!messages.length){
+		  res.status(404)
+		  res.json({Message:"No participants to show"})
+	  }
+	  res.json(messages)
+	}
+	catch(err){
+	  res.status(404);
+	  res.json({ message: err });
+	}
+})
+router.delete("/:groupId/messages/:messageId", async (req, res) =>{
+	let {groupId, messageId} = req.params;
+	try {
+	  const message = await Message.findById(messageId);
+	  await Group.findByIdAndUpdate(
+		groupId,
+		{ $pull: { messages: { $in: [ messageId ] }} },{useFindAndModify:false},
+	  );
+	  const removedGroup = await Message.deleteOne({ _id: messageId });
+	  if (removedGroup.deletedCount === 0) {
+		res.status(404);
+		res.json({Message:"Group was not found"});
+	  } else {
+		res.status(204).json(removedGroup);
+	  }
+	} catch (error) {
+	  res.status(404);
+	  res.json({ Message: error });
+	}
+  });
 module.exports = router;
