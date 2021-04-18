@@ -91,4 +91,31 @@ router.get("/", async (req, res) => {
 			res.json({ message: err });
 		}
 	})
+	router.patch("/:courtId", async (req,res) =>{
+		const {courtId} = req.params;
+		try {
+			res.status(202);
+			const updatedCourt = await Court.updateOne(
+			  { _id: courtId },
+			  {
+				$set: {
+					ammountOfCourts: req.body.ammountOfCourts,
+					price: req.body.price,
+					photo: req.body.photo,
+				},
+			  }
+			);
+			if (updatedCourt.n === 0) {
+			  res.status(404);
+			  res.json({Message:"Court was not found"});
+			} else if (updatedCourt.nModified === 0) {
+			  res.json({Message:"No modifications was done"});
+			} else {
+			  res.json(updatedCourt);
+			}
+		  } catch (error) {
+			res.status(404);
+			res.json({ Message: error });
+		  }
+		})
   module.exports = router;

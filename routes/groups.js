@@ -136,6 +136,7 @@ router.delete("/:groupId", async (req, res) =>{
 	  res.json({ Message: error });
 	}
   })
+
   router.patch("/leave/:groupId/:userId", async (req, res)=>{
 	const {groupId, userId} = req.params;
 	try{
