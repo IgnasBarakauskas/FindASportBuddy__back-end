@@ -6,7 +6,8 @@ const courtAddValidation = data => {
         ammountOfCourts: Joi.number().required(),
         price: Joi.number().required(),
         latitude: Joi.number().required(),
-        longitude: Joi.number().required()
+        longitude: Joi.number().required(),
+		photo: Joi.string()
         });
     return schema.validate(data)
 }
