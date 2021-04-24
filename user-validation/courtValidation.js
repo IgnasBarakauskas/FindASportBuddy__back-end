@@ -7,7 +7,7 @@ const courtAddValidation = data => {
         price: Joi.number().required(),
         latitude: Joi.number().required(),
         longitude: Joi.number().required(),
-		photo: Joi.string()
+		photo: Joi.optional(),
         });
     return schema.validate(data)
 }
