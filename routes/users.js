@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const {isLoggedIn} =require("../token-verification/TokenVerification");
+const { findById } = require("../models/Group");
 router.get("/", async (req, res) => {
   try {
     res.status(200);
@@ -127,4 +128,68 @@ router.get("/:userId", async (req, res) => {
 	  res.json({ message: err });
 	}
 })
+router.patch("/:userId", async (req, res) => {
+	try {
+	  const {fullName, newPassword, height, weight, photo, currentPassword} = req.body
+	  const {userId} = req.params
+	  const user = await User.findById(userId);
+	  const validPass = await bcrypt.compare(currentPassword, user.password)
+	  let hashedPassword=user.password
+	  if(newPassword){
+	  const salt = await bcrypt.genSalt(10);
+  	  hashedPassword = await bcrypt.hash(newPassword, salt);
+	  }
+	  if(!validPass) return res.status(400).json({Message: "Password is incorect"})
+	  res.status(202);
+	  const updatedUser = await User.updateOne(
+		{ _id: userId },
+		{
+		  $set: {
+			fullName: fullName,
+			password: hashedPassword,
+			height: height,
+			weight: weight,
+			photo: photo
+		  },
+		}
+	  );
+	  if (updatedUser.n === 0) {
+		res.status(404);
+		res.json({Message:"User was not found"});
+	  } else if (updatedUser.nModified === 0) {
+		res.json({Message:"No modifications was done"});
+	  } else {
+		res.json(updatedUser);
+	  }
+	} catch (error) {
+	  res.status(404);
+	  res.json({ Message: error });
+	}
+  });
+  router.delete("/:userId", async (req, res) => {
+	try {
+	  const {userId} = req.params
+	  const {currentPassword} = req.body
+	  res.status(204);
+	  const user = await User.findById(userId)
+	  const validPass = await bcrypt.compare(currentPassword, user.password)
+	  if(!validPass) return res.status(400).json({Message: "Password is incorect"})
+	  for (groupsId in user.groups){
+		await Group.findByIdAndUpdate(
+			user.groups[groupsId],
+			{ $pull: { participants: { $in: [ userId ] }} },{useFindAndModify:false},
+		  );
+	  }
+	  const removedUser = await User.deleteOne({ _id: userId });
+	  if (removedUser.deletedCount === 0) {
+		res.status(404);
+		res.json({Message:"Court was not found"});
+	  } else {
+		res.json(removedUser);
+	  }
+	} catch (error) {
+	  res.status(404);
+	  res.json({ Message: error });
+	}
+  });
 module.exports = router;

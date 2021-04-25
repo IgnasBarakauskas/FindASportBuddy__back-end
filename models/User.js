@@ -29,6 +29,10 @@ const UserSchema = mongoose.Schema({
         type:Number,
         required:false
     },
+	photo:{
+        type:String,
+        required:false
+    },
     latitude:{
         type:Number,
         required:false
