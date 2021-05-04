@@ -169,7 +169,7 @@ router.get("/:groupId/getParticipants", async (req,res) =>{
 	  const participantsId = group.participants;
 	  let participants =[];
 	  for(const index in participantsId){
-		  const user = await User.findById(_id=participantsId[index])
+		 await User.findById(_id=participantsId[index])
 		  participants.push(user)
 	  }
 	  if(!participants.length){
