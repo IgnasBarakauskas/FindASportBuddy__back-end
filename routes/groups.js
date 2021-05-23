@@ -164,18 +164,22 @@ router.delete("/:groupId", async (req, res) =>{
 })
 router.get("/:groupId/getParticipants", async (req,res) =>{
 	try{
-	  res.status(200);
+		
 	const group = await Group.findById(req.params.groupId)
-	  const participantsId = group.participants;
+	
+	const participantsId = group.participants;
 	  let participants =[];
 	  for(const index in participantsId){
-		 await User.findById(_id=participantsId[index])
-		  participants.push(user)
+		  const _id=participantsId[index]
+		 const user = await User.findById(_id,)
+		 participants.push({_id: user._id, groups: user.groups, fullName:user.fullName, height: user.height, weight:user.weight })
+		  
 	  }
 	  if(!participants.length){
 		  res.status(404)
 		  res.json({Message:"No participants to show"})
 	  }
+	  res.status(200);
 	  res.json(participants)
 	}
 	catch(err){
